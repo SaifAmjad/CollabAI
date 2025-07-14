@@ -53,7 +53,7 @@ const MyDocs = () => {
 
         <div className="grid gap-4 sm:grid-cols-4">
           {documents.length > 0 &&
-            documents.map((document) => (
+            documents?.map((document) => (
               <>
                 <Link to={`/editor/${document._id}`}>
                   <DocsCard text={document.data} />
