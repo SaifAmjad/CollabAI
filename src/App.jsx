@@ -12,7 +12,7 @@ function App() {
   const [visible, setVisible] = useState(false);
   return (
     <>
-      <AuthProvider>
+      {/* <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login setVisible={setVisible} />} />
           <Route
@@ -46,7 +46,7 @@ function App() {
             }
           />
         </Routes>
-      </AuthProvider>
+      </AuthProvider> */}
     </>
   );
 }

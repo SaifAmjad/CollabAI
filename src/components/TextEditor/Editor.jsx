@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { io } from "socket.io-client";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
 import { useParams } from "react-router-dom";
 import FloatingAIAction from "./FloatingAIAction";
 import Ably from "ably";
-import axios from "axios";
 import { fetchTextGeneration } from "../../services/aiGeneration";
 import throttle from "lodash/throttle";
 
