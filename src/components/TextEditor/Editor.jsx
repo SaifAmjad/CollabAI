@@ -112,6 +112,7 @@ const EditorField = () => {
     quilInstance.disable();
     quilInstance.setText("Loading...");
     setQuill(quilInstance);
+    quilInstance.enable();
   }, []);
 
   const handleTextOperation = async (operation) => {
