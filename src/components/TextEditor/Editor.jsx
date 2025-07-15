@@ -60,6 +60,7 @@ const EditorField = () => {
 
     const handleReceiveChange = (msg) => {
       const delta = msg.data;
+      console.log("🟡 Received delta from other instance:", msg);
       if (msg.clientId === ably.auth.clientId) return;
       quill.updateContents(delta);
     };
