@@ -41,19 +41,19 @@ const EditorField = () => {
     };
   }, [id]);
 
-  useEffect(() => {
-    if (quill == null || channel == null) return;
+useEffect(() => {
+  if (!quill || !channel) return;
 
+  const loadDocument = async () => {
+    const res = await fetch(`https://collabaidoc.vercel.app/api/load-document/${id}`);
+    const { data } = await res.json();
 
-    const loadDocument = async () => {
-      const res = await fetch(`https://collabaidoc.vercel.app/api/load-document/${id}`);
-      const { data } = await res.json();
-      quill.setContents(data);
-      quill.enable();
-    };
+    quill.setContents(data);
+    quill.enable(); // ✅ this enables typing
+  };
 
-    loadDocument();
-  }, [quill, channel, id]);
+  loadDocument();
+}, [quill, channel, id]);
 
   useEffect(() => {
     if (quill == null || channel == null) return;
@@ -72,21 +72,25 @@ const EditorField = () => {
     };
   }, [quill, channel]);
 
-  useEffect(() => {
-    if (quill == null || channel == null) return;
+ useEffect(() => {
+  if (!quill || !channel) return;
 
-    const handleTextChange = throttle((delta, oldDelta, source) => {
-      // if (source !== "user") return;
-      console.log("🟢 Publishing delta:", delta);
-      channel.publish("receive-changes", delta);
-    }, 100);
+  console.log("✅ Quill and channel ready — attaching text-change listener");
 
-    quill.on("text-change", handleTextChange);
+  const handleTextChange = throttle((delta, oldDelta, source) => {
+    console.log("🔥 Text change detected:", { delta, source });
+    if (source !== "user") return;
 
-    return () => {
-      quill.off("text-change", handleTextChange);
-    };
-  }, [quill, channel, AITextChange]);
+    console.log("🟢 Publishing delta:", delta);
+    channel.publish("receive-changes", delta);
+  }, 100);
+
+  quill.on("text-change", handleTextChange);
+
+  return () => {
+    quill.off("text-change", handleTextChange);
+  };
+}, [quill, channel]);
 
   useEffect(() => {
     if (quill == null || channel == null) return;
@@ -99,21 +103,23 @@ const EditorField = () => {
     return () => clearInterval(interval);
   }, [quill, channel, AITextChange]);
 
-  const wrapperRef = useCallback((wrapper) => {
-    if (wrapper === null) return;
+ const wrapperRef = useCallback((wrapper) => {
+  if (wrapper === null) return;
 
-    wrapper.innerHTML = "";
-    const editor = document.createElement("div");
-    wrapper.append(editor);
-    const quilInstance = new Quill(editor, {
-      theme: "snow",
-      modules: { toolbar: TOOLBAR_OPTIONS },
-    });
-    quilInstance.disable();
-    quilInstance.setText("Loading...");
-    setQuill(quilInstance);
-    quilInstance.enable();
-  }, []);
+  wrapper.innerHTML = "";
+  const editor = document.createElement("div");
+  wrapper.append(editor);
+
+  const quillInstance = new Quill(editor, {
+    theme: "snow",
+    modules: { toolbar: TOOLBAR_OPTIONS },
+  });
+
+  quillInstance.disable(); // initially disable
+  quillInstance.setText("Loading...");
+  setQuill(quillInstance); // this will trigger effects that depend on `quill`
+}, []);
+
 
   const handleTextOperation = async (operation) => {
     quill.root.innerHTML = ` <p class="loading-line w-3/4 h-4 bg-gray-300 rounded animate-pulse mb-1"></p> <p class="loading-line w-1/2 h-4 bg-gray-300 rounded animate-pulse mb-1"></p> <p class="loading-line w-full h-4 bg-gray-300 rounded animate-pulse mb-1"></p> <p class="loading-line w-1/2 h-4 bg-gray-300 rounded animate-pulse"></p>
