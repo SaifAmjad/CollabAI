@@ -39,10 +39,10 @@ function App() {
           <Route
             path="/editor/:id"
             element={
-              <ProtectedRoutes>
+             
                 
                 <TextEditor />
-              </ProtectedRoutes>
+             
             }
           />
         </Routes>

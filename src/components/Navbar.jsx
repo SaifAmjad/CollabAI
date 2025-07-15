@@ -6,7 +6,6 @@ import ShareModal from "./TextEditor/ShareModal";
 import SecondaryBtn from "./SecondaryBtn";
 import Alert from "./Alert";
 
-
 const navigation = [
   { name: "Product", href: "#" },
   { name: "Features", href: "#" },
@@ -21,18 +20,18 @@ const Navbar = ({ handleSaveDocument }) => {
   const [openModal, setOpenModal] = useState(false);
 
   const [errorFlag, setErrorFlag] = useState(false);
-  
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
 
   return (
     <>
-    <Alert
-            msg={"Login to continue"}
-            description={"You are not logged in to continue this step"}
-            visible={errorFlag}
-            setVisible={setErrorFlag}
-            theme="error"
-            duration={4000}
-          /> 
+      <Alert
+        msg={"Login to continue"}
+        description={"You are not logged in to continue this step"}
+        visible={errorFlag}
+        setVisible={setErrorFlag}
+        theme="error"
+        duration={4000}
+      />
       <header className="absolute inset-x-0 top-0 z-40 border-b border-slate-200 bg-white">
         <nav
           aria-label="Global"
@@ -76,31 +75,39 @@ const Navbar = ({ handleSaveDocument }) => {
               </SecondaryBtn>
             </div>
             <div>
-              <PrimaryBtn
-                classname="shadow-lg"
-                onclick={() =>{ 
-                  if (!JSON.parse(localStorage.getItem("user"))) {
-        setErrorFlag(true);
-        return;
-      }
-                  navigate("/mydocs")
-                }}
-              >
-                <div className="flex items-center">My docs</div>
-              </PrimaryBtn>
+              {user && (
+                <PrimaryBtn
+                  classname="shadow-lg"
+                  onclick={() => {
+                    if (!JSON.parse(localStorage.getItem("user"))) {
+                      setErrorFlag(true);
+                      return;
+                    }
+                    navigate("/mydocs");
+                  }}
+                >
+                  <div className="flex items-center">My docs</div>
+                </PrimaryBtn>
+              )}
             </div>
             <div className="lg:flex lg:flex-1 lg:justify-end">
-              <PrimaryBtn classname="shadow-lg" onclick={handleSaveDocument}>
-                <div className="flex items-center">
-                  Save
-                  <span
-                    class="material-symbols-outlined"
-                    style={{ fontSize: "18px", marginLeft: "8px" }}
-                  >
-                    upload
-                  </span>
-                </div>
-              </PrimaryBtn>
+              {user ? (
+                <PrimaryBtn classname="shadow-lg" onclick={handleSaveDocument}>
+                  <div className="flex items-center">
+                    Save
+                    <span
+                      class="material-symbols-outlined"
+                      style={{ fontSize: "18px", marginLeft: "8px" }}
+                    >
+                      upload
+                    </span>
+                  </div>
+                </PrimaryBtn>
+              ) : (
+                <PrimaryBtn classname="shadow-lg" onclick={handleSaveDocument}>
+                  <div className="flex items-center">Login</div>
+                </PrimaryBtn>
+              )}
             </div>
           </div>
         </nav>
