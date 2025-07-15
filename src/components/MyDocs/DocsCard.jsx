@@ -4,7 +4,7 @@ import * as motion from "motion/react-client";
 const DocsCard = ({ text }) => {
   const [plainText, setPlainText] = useState("");
   useEffect(() => {
-    const textConversion = text.ops.map((op) => op.insert).join("");
+    const textConversion = text?.ops?.map((op) => op?.insert).join("");
     setPlainText(textConversion);
   }, []);
 
