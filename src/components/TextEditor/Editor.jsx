@@ -77,6 +77,7 @@ const EditorField = () => {
 
     const handleTextChange = throttle((delta, oldDelta, source) => {
       if (source !== "user") return;
+      console.log("🟢 Publishing delta:", delta);
       channel.publish("receive-changes", delta);
     }, 100);
 
